@@ -9,6 +9,10 @@ export default {
       fontFamily: {
         sans: ['Roboto', 'sans-serif']
       },
+      flex: {
+        '0-0': '0 0 auto',
+        '1-0': '1 0 auto',
+      }
     },
   },
   plugins: [],
