@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FaGoogle, FaBars } from 'react-icons/fa';
 import logo from '../assets/images/logo.png';
 import profileDefault from '../assets/images/profile.png';
-
+import SigninMenu from './SigninMenu';
 import { AiOutlineClose, AiOutlineMenu, AiOutlineBell } from 'react-icons/ai';
+import SignupMenu from './SignupMenu';
 
 const Navbar = () => {
     // Navigation items
@@ -16,27 +17,37 @@ const Navbar = () => {
         { id: 5, text: 'Contact', to: '/contact' },
     ];
 
+    // Dynamic menus
+    const documentRef = useRef(document);
+    const [isProfileMenueOpen, setIsProfileMenueOpen] = useState(false);
+    const [isSigninMenueOpen, setIsSigninMenueOpen] = useState(false);
+    const [isSignupMenueOpen, setIsSignupMenueOpen] = useState(false);
+
+    // Hide menus on blur
+    const handleClick = useCallback((e) => {
+        const el = e.target.closest('[data-group-menu]');
+        (!el || el.dataset.groupMenu != 'profile') && setIsProfileMenueOpen(false);
+        (!el || el.dataset.groupMenu != 'signin') && setIsSigninMenueOpen(false);
+        (!el || el.dataset.groupMenu != 'signup') && setIsSignupMenueOpen(false);
+    }, [isProfileMenueOpen, isSigninMenueOpen, isSignupMenueOpen]);
+
+    useEffect(() => {
+        documentRef.current.addEventListener("click", handleClick);
+        return () => {
+            documentRef.current.removeEventListener("click", handleClick);
+        };
+    }, [isProfileMenueOpen, isSigninMenueOpen, isSignupMenueOpen]);
+
+
     // State to manage the navbar's visibility
     const [nav, setNav] = useState(false);
 
-    // Toggle function to handle the navbar's display
-    const handleNav = () => {
-        setNav(!nav);
-    };
 
-    // Hide user menu when focus out 
-    const HideUserMenu = () => {
-        setTimeout(() => {
-            if (document.activeElement.id != "user-menu" && document.activeElement.dataset.field != "menu") setIsProfileMenueOpen(false);
-        }, 1);
-    }
-    const [isProfileMenueOpen, setIsProfileMenueOpen] = useState(false);
-
-    const [session, setSession] = useState(false);
+    const [session, setSession] = useState(true);
     const signOut = () => setSession(false);
     const profileImage = false;
 
-    // Highlight ctive links
+    // Highlight active links
     const linkClass = ({ isActive }) =>
         isActive
             ? 'p-2 m-1 lg:p-3 lg:m2 hover:bg-[#00df9a] rounded-md cursor-pointer duration-300 text-black bg-[#00df9a]'
@@ -50,9 +61,9 @@ const Navbar = () => {
     return (
         <nav className="bg-black border-b border-[#00df9a]">
 
-            <div className='container-xl lg:container m-auto px-2 bg-black flex justify-between items-center h-20 text-white'>
+            <div className='container-xl lg:container md:max-w-7xl m-auto px-2 bg-black flex justify-between items-center h-20 text-white'>
                 {/* Logo */}
-                <h1 className='mr-10 text-3xl font-bold text-[#00df9a]'><NavLink to="/">React website</NavLink></h1>
+                <h1 className='mr-10 text-3xl flex-0-0 font-bold text-[#00df9a]'><NavLink to="/">React website</NavLink></h1>
 
                 {/* Desktop Navigation */}
                 <ul className='hidden md:flex md:flex-1-0'>
@@ -64,19 +75,35 @@ const Navbar = () => {
                 </ul>
 
 
-                {!session ?
+                {/* Menu Section */}
+                {!session &&
                     /* Desktop Login buttons */
-                    < div className="hidden gap-2 md:flex md:flex-0-0 ml-10">
-                        <button className="rounded-xl bg-black px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-200 active:bg-red-400 ">
-                            <span onClick={() => setSession(true)}>Sign in</span>
-                        </button>
-                        <button className="rounded-xl bg-red-500 px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-600 active:bg-red-700 ">
-                            <span onClick={() => setSession(true)}>Sign up</span>
-                        </button>
-                    </div>
-                    :
-                    /* <!-- notification button --> */
-                    < div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
+                    <section className='hidden absolute inset-y-0 right-0 md:flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0'>
+                        <div className="gap-2 flex flex-0-0">
+                            <div className='relative' data-group-menu='signin'>
+                                <button onClick={() => { setIsSigninMenueOpen((prev) => !prev) }} className="rounded-xl bg-black px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-200 active:bg-red-400 ">
+                                    Sign in
+                                </button>
+
+                                {/* Sign in menu */}
+                                {isSigninMenueOpen && <SigninMenu />}
+                            </div>
+
+                            <div className='relative' data-group-menu='signup'>
+                                <button onClick={() => { setIsSignupMenueOpen((prev) => !prev) }} className="rounded-xl bg-red-500 px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-600 active:bg-red-700 ">
+                                    Sign up
+                                </button>
+
+                                {/* Sign up menu */}
+                                {isSignupMenueOpen && <SignupMenu />}
+                            </div>
+                        </div>
+                    </section>
+                }
+                {session &&
+                    < div className="absolute md:inset-y-0 right-14 md:right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
+
+                        {/* Notification button */}
                         <NavLink to="/messages" className="relative group">
                             <button type="button" className="relative rounded-full bg-gray-800 mt-1 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                 <AiOutlineBell className='text-2xl' />
@@ -85,6 +112,7 @@ const Navbar = () => {
                                 2
                             </span>
                         </NavLink>
+
                         {/* <!-- Profile dropdown button --> */}
                         <div className="relative ml-3">
                             <div>
@@ -94,8 +122,8 @@ const Navbar = () => {
                                     id="user-menu-button"
                                     aria-expanded="false"
                                     aria-haspopup="true"
-                                    onClick={() => { setIsProfileMenueOpen(true); }}
-                                    onBlur={() => HideUserMenu()}
+                                    data-group-menu="profile"
+                                    onClick={() => { setIsProfileMenueOpen((prev) => !prev) }}
                                 >
                                     <span className="absolute -inset-1.5"></span>
                                     <span className="sr-only">Open user menu</span>
@@ -119,6 +147,7 @@ const Navbar = () => {
                                         aria-orientation="vertical"
                                         aria-labelledby="user-menu-button"
                                         tabIndex="-1"
+                                        data-group-menu="profile"
                                     >
                                         <NavLink
                                             to="/profile"
@@ -159,7 +188,7 @@ const Navbar = () => {
                 }
 
                 {/* Mobile Navigation Icon */}
-                <div onClick={handleNav} className='block md:hidden'>
+                <div onClick={() => setNav(!nav)} className='block md:hidden'>
                     {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
                 </div>
 
@@ -177,9 +206,25 @@ const Navbar = () => {
                     {/* Mobile Navigation Items */}
                     {navItems.map(item => (
                         <li key={item.id}>
-                            <NavLink to={item.to} className={linkClassMobile}>{item.text}</NavLink>
+                            <NavLink to={item.to} className={linkClassMobile} onClick={() => setNav(false)}>{item.text}</NavLink>
                         </li>
                     ))}
+
+                    {!session &&
+                        <div className='flex mt-10'>
+                            <div className='relative ml-2' data-group-menu='signin'>
+                                <button className="rounded-xl bg-gray-200 px-3 py-1 text-sm text-black transition duration-200 hover:bg-red-200 active:bg-red-400 ">
+                                    <NavLink to='login' onClick={() => setNav(false)}>Sign in</NavLink>
+                                </button>
+                            </div>
+
+                            <div className='relative ml-2' data-group-menu='signup'>
+                                <button className="rounded-xl bg-red-500 px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-600 active:bg-red-700 ">
+                                    <NavLink to='register' onClick={() => setNav(false)}>Sign up</NavLink>
+                                </button>
+                            </div>
+                        </div>
+                    }
                 </ul>
             </div>
         </nav >
