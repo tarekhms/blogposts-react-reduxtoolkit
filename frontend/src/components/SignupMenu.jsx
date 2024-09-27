@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useRegisterMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
-import Spinner from "./Spinner";
+import { Spinner, Pulse } from "./Spinners";
 import { toast } from 'react-toastify';
 
 const SignupMenu = ({ mobile = false, setIsSigninMenueOpen }) => {
@@ -84,13 +84,14 @@ const SignupMenu = ({ mobile = false, setIsSigninMenueOpen }) => {
                             required
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
-                        <div className="text-center md:text-left">
+                        <div className="text-center md:text-left flex items-baseline">
                             <button
                                 className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
                                 type="submit"
                             >
                                 Sign up
                             </button>
+                            {isLoading && <Pulse />}
                         </div>
                         <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">
                             Already have an account?{" "}
@@ -105,7 +106,6 @@ const SignupMenu = ({ mobile = false, setIsSigninMenueOpen }) => {
                         </div>
                     </div>
                 </div>
-                {isLoading && <Spinner />}
             </form>
         </section>
     );

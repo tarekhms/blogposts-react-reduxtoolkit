@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
-import Spinner from './Spinner';
+import { Spinner, Pulse } from './Spinners';
 import { toast } from 'react-toastify';
 
 const SigninMenu = ({ mobile = false, setIsSignupMenueOpen }) => {
@@ -72,13 +72,14 @@ const SigninMenu = ({ mobile = false, setIsSignupMenueOpen }) => {
                                 Forgot Password?
                             </Link>
                         </div>
-                        <div className="text-center md:text-left">
+                        <div className="text-center md:text-left flex items-baseline">
                             <button
                                 className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
                                 type="submit"
                             >
                                 Login
                             </button>
+                            {isLoading && <Pulse />}
                         </div>
                         <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">
                             Don&apos;t have an account?{" "}
@@ -93,7 +94,6 @@ const SigninMenu = ({ mobile = false, setIsSignupMenueOpen }) => {
                         </div>
                     </div>
                 </div>
-                {isLoading && <Spinner />}
             </form>
         </section>
     );
