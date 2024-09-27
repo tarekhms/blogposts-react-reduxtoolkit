@@ -2,7 +2,7 @@ import SignupMenu from "../components/SignupMenu"
 
 const RegisterPage = () => {
     return (
-        <SignupMenu />
+        <SignupMenu mobile='true' />
     )
 }
 

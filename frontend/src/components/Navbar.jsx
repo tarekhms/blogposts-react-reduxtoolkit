@@ -1,13 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
-import { FaGoogle, FaBars } from 'react-icons/fa';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 import profileDefault from '../assets/images/profile.png';
 import SigninMenu from './SigninMenu';
 import { AiOutlineClose, AiOutlineMenu, AiOutlineBell } from 'react-icons/ai';
 import SignupMenu from './SignupMenu';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLogoutMutation } from '../slices/usersApiSlice';
+import { removeCredentials } from '../slices/authSlice';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
+    const profileImage = false;
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { userInfo } = useSelector((state) => state.auth);
+
     // Navigation items
     const navItems = [
         { id: 1, text: 'Home', to: '/' },
@@ -29,6 +38,7 @@ const Navbar = () => {
         (!el || el.dataset.groupMenu != 'profile') && setIsProfileMenueOpen(false);
         (!el || el.dataset.groupMenu != 'signin') && setIsSigninMenueOpen(false);
         (!el || el.dataset.groupMenu != 'signup') && setIsSignupMenueOpen(false);
+        (!el || el.dataset.groupMenu != 'nav') && setNav(false);
     }, [isProfileMenueOpen, isSigninMenueOpen, isSignupMenueOpen]);
 
     useEffect(() => {
@@ -38,14 +48,20 @@ const Navbar = () => {
         };
     }, [isProfileMenueOpen, isSigninMenueOpen, isSignupMenueOpen]);
 
-
     // State to manage the navbar's visibility
     const [nav, setNav] = useState(false);
 
-
-    const [session, setSession] = useState(true);
-    const signOut = () => setSession(false);
-    const profileImage = false;
+    // Logout
+    const [logout] = useLogoutMutation();
+    const signOut = async () => {
+        try {
+            await logout().unwrap();
+            dispatch(removeCredentials());
+            navigate('/');
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     // Highlight active links
     const linkClass = ({ isActive }) =>
@@ -76,7 +92,7 @@ const Navbar = () => {
 
 
                 {/* Menu Section */}
-                {!session &&
+                {!userInfo &&
                     /* Desktop Login buttons */
                     <section className='hidden absolute inset-y-0 right-0 md:flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0'>
                         <div className="gap-2 flex flex-0-0">
@@ -86,7 +102,7 @@ const Navbar = () => {
                                 </button>
 
                                 {/* Sign in menu */}
-                                {isSigninMenueOpen && <SigninMenu />}
+                                {isSigninMenueOpen && <SigninMenu setIsSignupMenueOpen={setIsSignupMenueOpen} />}
                             </div>
 
                             <div className='relative' data-group-menu='signup'>
@@ -95,12 +111,12 @@ const Navbar = () => {
                                 </button>
 
                                 {/* Sign up menu */}
-                                {isSignupMenueOpen && <SignupMenu />}
+                                {isSignupMenueOpen && <SignupMenu setIsSigninMenueOpen={setIsSigninMenueOpen} />}
                             </div>
                         </div>
                     </section>
                 }
-                {session &&
+                {userInfo &&
                     < div className="absolute md:inset-y-0 right-14 md:right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
 
                         {/* Notification button */}
@@ -188,8 +204,8 @@ const Navbar = () => {
                 }
 
                 {/* Mobile Navigation Icon */}
-                <div onClick={() => setNav(!nav)} className='block md:hidden'>
-                    {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
+                <div onClick={() => setNav(!nav)} className='block md:hidden' data-group-menu='nav'>
+                    {nav ? <AiOutlineClose size={20} data-group-menu='nav' /> : <AiOutlineMenu size={20} data-group-menu='nav' />}
                 </div>
 
                 {/* Mobile Navigation Menu */}
@@ -210,7 +226,7 @@ const Navbar = () => {
                         </li>
                     ))}
 
-                    {!session &&
+                    {!userInfo &&
                         <div className='flex mt-10'>
                             <div className='relative ml-2' data-group-menu='signin'>
                                 <button className="rounded-xl bg-gray-200 px-3 py-1 text-sm text-black transition duration-200 hover:bg-red-200 active:bg-red-400 ">

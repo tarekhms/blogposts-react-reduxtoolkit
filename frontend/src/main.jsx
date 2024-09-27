@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
+import store from './store.js';
+import { Provider } from 'react-redux';
 import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -18,7 +20,9 @@ const router = createBrowserRouter(createRoutesFromElements(
 ));
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+  <Provider store={store}>
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
+  </Provider>
 );

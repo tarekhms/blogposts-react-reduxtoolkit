@@ -2,7 +2,7 @@ import SigninMenu from "../components/SigninMenu"
 
 const LoginPage = () => {
     return (
-        <SigninMenu />
+        <SigninMenu mobile='true' />
     )
 }
 
