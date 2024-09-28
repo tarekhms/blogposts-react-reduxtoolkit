@@ -7,7 +7,7 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <div className='container-xl lg:container m-auto' >
+      <div className='container-xl lg:container m-auto mt-7' >
         <Outlet />
       </div>
       <ToastContainer />

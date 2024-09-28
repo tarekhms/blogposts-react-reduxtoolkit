@@ -37,7 +37,7 @@ const SignupMenu = ({ mobile = false, setIsSigninMenueOpen }) => {
     return (
         <section
             id="login-menu"
-            className="md:absolute md:p-10 pt-5 pb-10 box-content right-0 z-10 m-auto mt-2 w-11/12 md:w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            className="md:p-10 pt-5 pb-10 box-content z-10 m-auto w-11/12 md:w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             tabIndex="0"
         >
             <form id="signupForm" name="signupForm" onSubmit={signupHandler} className="relative">

@@ -66,8 +66,8 @@ const Navbar = () => {
     // Highlight active links
     const linkClass = ({ isActive }) =>
         isActive
-            ? 'p-2 m-1 lg:p-3 lg:m2 hover:bg-[#00df9a] rounded-md cursor-pointer duration-300 text-black bg-[#00df9a]'
-            : 'p-2 m-1 lg:p-3 lg:m2 hover:bg-[#00df9a] rounded-md cursor-pointer duration-300 hover:text-black';
+            ? 'p-1 lg:p-2 m-1 lg:p-3 lg:m2 hover:bg-[#00df9a] rounded-md cursor-pointer duration-300 text-black bg-[#00df9a]'
+            : 'p-1 lg:p-2 m-1 lg:p-3 lg:m2 hover:bg-[#00df9a] rounded-md cursor-pointer duration-300 hover:text-black';
 
     const linkClassMobile = ({ isActive }) =>
         isActive
@@ -79,7 +79,7 @@ const Navbar = () => {
 
             <div className='container-xl lg:container md:max-w-7xl m-auto px-2 bg-black flex justify-between items-center h-20 text-white'>
                 {/* Logo */}
-                <h1 className='mr-10 text-3xl flex-0-0 font-bold text-[#00df9a]'><NavLink to="/">React website</NavLink></h1>
+                <h1 className='mr-5 lg:mr-10 text-3xl flex-0-0 font-bold text-[#00df9a]'><NavLink to="/">React website</NavLink></h1>
 
                 {/* Desktop Navigation */}
                 <ul className='hidden md:flex md:flex-1-0'>
@@ -94,24 +94,26 @@ const Navbar = () => {
                 {/* Menu Section */}
                 {!userInfo &&
                     /* Desktop Login buttons */
-                    <section className='hidden absolute inset-y-0 right-0 md:flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0'>
+                    <section className='hidden absolute inset-y-0 right-0 md:flex items-center pr-2 md:static md:inset-auto ml-3 lg:ml-6 md:pr-0'>
                         <div className="gap-2 flex flex-0-0">
                             <div className='relative' data-group-menu='signin'>
                                 <button onClick={() => { setIsSigninMenueOpen((prev) => !prev) }} className="rounded-xl bg-black px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-200 active:bg-red-400 ">
                                     Sign in
                                 </button>
-
-                                {/* Sign in menu */}
-                                {isSigninMenueOpen && <SigninMenu setIsSignupMenueOpen={setIsSignupMenueOpen} />}
+                                <div className='md:absolute right-0 mt-2 z-10'>
+                                    {/* Sign in menu */}
+                                    {isSigninMenueOpen && <SigninMenu setIsSignupMenueOpen={setIsSignupMenueOpen} />}
+                                </div>
                             </div>
 
                             <div className='relative' data-group-menu='signup'>
                                 <button onClick={() => { setIsSignupMenueOpen((prev) => !prev) }} className="rounded-xl bg-red-500 px-3 py-1 text-sm text-white transition duration-200 hover:bg-red-600 active:bg-red-700 ">
                                     Sign up
                                 </button>
-
-                                {/* Sign up menu */}
-                                {isSignupMenueOpen && <SignupMenu setIsSigninMenueOpen={setIsSigninMenueOpen} />}
+                                <div className='md:absolute right-0 mt-2 z-10'>
+                                    {/* Sign up menu */}
+                                    {isSignupMenueOpen && <SignupMenu setIsSigninMenueOpen={setIsSigninMenueOpen} />}
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -212,8 +214,8 @@ const Navbar = () => {
                 <ul
                     className={
                         nav
-                            ? 'fixed md:hidden left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500 z-10'
-                            : 'ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%]'
+                            ? 'fixed md:hidden left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500 z-20'
+                            : 'ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%] z-20'
                     }
                 >
                     {/* Mobile Logo */}
