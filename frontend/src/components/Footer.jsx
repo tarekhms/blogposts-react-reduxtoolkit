@@ -10,7 +10,7 @@ const Footer = () => {
 
             <div className="table sm:block container m-auto px-2 sm:px-0 sm:mb-5">
                 <div className='table-cell sm:inline sm:w-min relative pl-[22px] globe sm:mr-6'>English</div>
-                <div className='col-count-3 sm:col-none sm:inline pl-4'>
+                <div className='col-count-3 sm:col-none sm:inline pl-4 sm:pl-0'>
                     <div className='sm:inline sm:mr-6'><NavLink to="/" className={activeLinks}>Home</NavLink></div>
                     <div className='sm:inline sm:mr-6'><NavLink to="news" className={activeLinks}>News</NavLink></div>
                     <div className='sm:inline sm:mr-6'><NavLink to="#" >Categories</NavLink></div>
